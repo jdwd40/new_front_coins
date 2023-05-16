@@ -5,3 +5,5 @@ export const CoinDetail = () => {
     <div>CoinDetail</div>
   )
 }
+
+export default CoinDetail;
