@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
+  Center,
   FormControl,
   FormLabel,
   Input,
@@ -31,7 +32,9 @@ function Login() {
       // Store the JWT in the user's browser
       localStorage.setItem('token', response.token);
       // Set the user's data in the AuthContext
-      const user = await axios.get(`http://localhost:9090/api/user/getemail/${email}`) 
+      const user = await axios.get(
+        `http://localhost:9090/api/user/getemail/${email}`
+      );
 
       setUser(user.data);
       // Show a success toast
@@ -59,27 +62,29 @@ function Login() {
   };
 
   return (
-    <Box as="form" onSubmit={handleSubmit}>
-      <FormControl id="email">
-        <FormLabel>Email</FormLabel>
-        <Input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </FormControl>
-      <FormControl id="password">
-        <FormLabel>Password</FormLabel>
-        <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </FormControl>
-      <Button mt={4} colorScheme="teal" type="submit">
-        Login
-      </Button>
-    </Box>
+    <Center>
+      <Box as="form" onSubmit={handleSubmit}>
+        <FormControl id="email">
+          <FormLabel>Email</FormLabel>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </FormControl>
+        <FormControl id="password">
+          <FormLabel>Password</FormLabel>
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </FormControl>
+        <Button mt={4} colorScheme="teal" type="submit">
+          Login
+        </Button>
+      </Box>
+    </Center>
   );
 }
 
