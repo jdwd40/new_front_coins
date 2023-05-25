@@ -44,7 +44,7 @@ const CoinDetails = () => {
     if (priceHistory.length === 0 || !chartContainerRef.current) return;
 
     const chartData = priceHistory.map(entry => ({
-      time: new Date(entry.timestamp).getTime() / 1000,
+      time: Math.floor(new Date(entry.timestamp).getTime() / 1000), // Unix timestamp in seconds
       value: Number(entry.price),
     }));
 
@@ -52,13 +52,9 @@ const CoinDetails = () => {
       chartRef.current = createChart(chartContainerRef.current, { 
         width: 500, 
         height: 300,
-        localization: {
-          timeFormatter: (unixTime) => {
-            const date = new Date(unixTime * 1000);
-            const hours = date.getUTCHours().toString().padStart(2, '0');
-            const minutes = date.getUTCMinutes().toString().padStart(2, '0');
-            return `${hours}:${minutes}`;
-          },
+        timeScale: {
+          timeVisible: true,
+          secondsVisible: false,
         },
       });
 
