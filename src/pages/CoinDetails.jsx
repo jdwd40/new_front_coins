@@ -25,7 +25,7 @@ const CoinDetails = () => {
       } catch (e) {
         setError(e.toString());
       }
-      
+
       try {
         const historyResponse = await axios.get(`http://localhost:9090/api/history/${coin_id}`);
         const lastTenEntries = historyResponse.data.priceHistory;
@@ -36,15 +36,21 @@ const CoinDetails = () => {
 
       setIsLoading(false);
     };
-  
+
     fetchCoin();
+
+    // const intervalId = setInterval(() => {
+    //   fetchCoin();
+    // }, 5000);
+
+   
   }, [coin_id]);
 
   useEffect(() => {
     if (priceHistory.length === 0 || !chartContainerRef.current) return;
 
     const chartData = priceHistory.map(entry => ({
-      time: Math.floor(new Date(entry.timestamp).getTime() / 1000), // Unix timestamp in seconds
+      time: new Date(entry.timestamp).getTime() / 1000,
       value: Number(entry.price),
     }));
 
