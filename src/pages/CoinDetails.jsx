@@ -28,8 +28,8 @@ const CoinDetails = () => {
 
       try {
         const historyResponse = await axios.get(`http://localhost:9090/api/history/${coin_id}`);
-        const lastTenEntries = historyResponse.data.priceHistory;
-        setPriceHistory(lastTenEntries);
+        const allEntries = historyResponse.data.priceHistory;
+        setPriceHistory(allEntries);
       } catch (e) {
         setError(e.toString());
       }
@@ -38,12 +38,6 @@ const CoinDetails = () => {
     };
 
     fetchCoin();
-
-    // const intervalId = setInterval(() => {
-    //   fetchCoin();
-    // }, 5000);
-
-   
   }, [coin_id]);
 
   useEffect(() => {
@@ -82,10 +76,20 @@ const CoinDetails = () => {
     return null;
   }
 
+  const lastPrice = priceHistory[priceHistory.length - 1].price;
+  const secondLastPrice = priceHistory[priceHistory.length - 2].price;
+  const priceChange = ((lastPrice - secondLastPrice) / secondLastPrice) * 100;
+
+  const historicalHigh = Math.max(...priceHistory.map(entry => entry.price));
+  const historicalLow = Math.min(...priceHistory.map(entry => entry.price));
+
   return (
     <Box p='5'>
       <Heading mb={4}>{coin.name}</Heading>
       <Text pb='5' fontSize="xl">Current Price: {coin.current_price}</Text>
+      <Text pb='5' fontSize="xl">Price Change: {priceChange.toFixed(2)}%</Text>
+      <Text pb='5' fontSize="xl">Historical High: {historicalHigh}</Text>
+      <Text pb='5' fontSize="xl">Historical Low: {historicalLow}</Text>
       
       <div ref={chartContainerRef} style={{ width: '100%', height: '300px' }} />
 
