@@ -10,9 +10,13 @@ import {
   Collapse,
   IconButton,
   useColorModeValue,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem
 } from '@chakra-ui/react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, CloseIcon, ChevronDownIcon } from '@chakra-ui/icons';
 
 function Navbar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -22,7 +26,7 @@ function Navbar() {
 
   console.log('from navbar', user);
   return (
-    <Box bg="teal.500" px={4}>
+    <Box bg="green.900" px={4}>
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
         <IconButton
           size={'md'}
@@ -38,14 +42,6 @@ function Navbar() {
           color="white"
         >
           Crypto Coins Exchange Simulator
-        </Text>
-        <Text
-          fontSize={'1xl'}
-          fontFamily={'monospace'}
-          fontWeight={500}
-          color="white"
-        >
-          {user ? `Welcome, ${user.username}!` : 'Welcome, guest!'}
         </Text>
         <Box display={{ base: 'none', md: 'flex' }}>
           <Navigation />
@@ -80,21 +76,10 @@ function Navigation() {
           as={RouterLink}
           to="/login"
           colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/login' ? buttonBg : null}
+          variant={'solid'}
+          bg={location.pathname === '/login' || location.pathname === '/register' ? buttonBg : null}
         >
           Login
-        </Button>
-      )}
-      {!user && (
-        <Button
-          as={RouterLink}
-          to="/register"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/register' ? buttonBg : null}
-        >
-          Register
         </Button>
       )}
       {user && (
@@ -109,37 +94,16 @@ function Navigation() {
         </Button>
       )}
       {user && (
-        <Button
-          as={RouterLink}
-          to="/portfolio"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/portfolio' ? buttonBg : null}
-        >
-          Portfolio
-        </Button>
-      )}
-      {user && (
-        <Button
-          as={RouterLink}
-          to="/transactions"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/transactions' ? buttonBg : null}
-        >
-          Transactions
-        </Button>
-      )}
-      {user && (
-        <Button
-          as={RouterLink}
-          to="/profile"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/profile' ? buttonBg : null}
-        >
-          Profile
-        </Button>
+        <Menu>
+          <MenuButton as={Button} colorScheme={'teal'} variant={'link'} rightIcon={<ChevronDownIcon />}>
+            Welcome, {user.username}!
+          </MenuButton>
+          <MenuList>
+            <MenuItem as={RouterLink} to="/portfolio">Portfolio</MenuItem>
+            <MenuItem as={RouterLink} to="/transactions">Transactions</MenuItem>
+            <MenuItem as={RouterLink} to="/profile">Profile</MenuItem>
+          </MenuList>
+        </Menu>
       )}
       {user && (
         <Button onClick={logout} colorScheme={'teal'} variant={'link'}>
@@ -156,7 +120,7 @@ function MobileNavigation() {
   const buttonBg = useColorModeValue('gray.200', 'gray.700');
 
   return (
-    <Stack bg="teal.500" p={4} display={{ md: 'none' }}>
+    <Stack p={4} display={{ md: 'none' }}>
       <Button
         as={RouterLink}
         to="/"
@@ -170,70 +134,38 @@ function MobileNavigation() {
         <Button
           as={RouterLink}
           to="/login"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/login' ? buttonBg : null}
+          colorScheme={'white'}
+          variant={'solid'}
+          bg={location.pathname === '/login' || location.pathname === '/register' ? buttonBg : null}
         >
           Login
-        </Button>
-      )}
-      {!user && (
-        <Button
-          as={RouterLink}
-          to="/register"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/register' ? buttonBg : null}
-        >
-          Register
         </Button>
       )}
       {user && (
         <Button
           as={RouterLink}
           to="/coins"
-          colorScheme={'teal'}
+          colorScheme={'white'}
           variant={'link'}
-          bg={location.pathname === '/coins' ? buttonBg : null}
+          bg={location.pathname === '/' ? buttonBg : null}
         >
           Coins
         </Button>
       )}
       {user && (
-        <Button
-          as={RouterLink}
-          to="/portfolio"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/portfolio' ? buttonBg : null}
-        >
-          Portfolio
-        </Button>
+        <Menu>
+          <MenuButton as={Button} colorScheme={'white'} variant={'link'} rightIcon={<ChevronDownIcon />}>
+            Welcome, {user.username}!
+          </MenuButton>
+          <MenuList>
+            <MenuItem as={RouterLink} to="/portfolio">Portfolio</MenuItem>
+            <MenuItem as={RouterLink} to="/transactions">Transactions</MenuItem>
+            <MenuItem as={RouterLink} to="/profile">Profile</MenuItem>
+          </MenuList>
+        </Menu>
       )}
       {user && (
-        <Button
-          as={RouterLink}
-          to="/transactions"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/transactions' ? buttonBg : null}
-        >
-          Transactions
-        </Button>
-      )}
-      {user && (
-        <Button
-          as={RouterLink}
-          to="/profile"
-          colorScheme={'teal'}
-          variant={'link'}
-          bg={location.pathname === '/profile' ? buttonBg : null}
-        >
-          Profile
-        </Button>
-      )}
-      {user && (
-        <Button onClick={logout} colorScheme={'teal'} variant={'link'}>
+        <Button onClick={logout} colorScheme={'whiteAlpha'} variant={'link'}>
           Logout
         </Button>
       )}

@@ -80,8 +80,11 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </FormControl>
-        <Button mt={4} colorScheme="teal" type="submit">
+        <Button mt={4} mr='4' colorScheme="teal" type="submit">
           Login
+        </Button>
+        <Button mt={4} colorScheme="teal" variant='outline'>
+          <a href="/register">Register</a>
         </Button>
       </Box>
     </Center>

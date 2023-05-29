@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { createChart } from 'lightweight-charts';
-import { Box, Text, Heading, Spinner } from '@chakra-ui/react';
+import { Box, Text, Heading, Spinner, Flex, Stat, StatLabel, StatNumber, VStack, HStack } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 const CoinDetails = () => {
@@ -49,8 +49,8 @@ const CoinDetails = () => {
     }));
 
     if (!chartRef.current) {
-      chartRef.current = createChart(chartContainerRef.current, { 
-        width: 500, 
+      chartRef.current = createChart(chartContainerRef.current, {
+        width: 500,
         height: 300,
         timeScale: {
           timeVisible: true,
@@ -86,15 +86,35 @@ const CoinDetails = () => {
   return (
     <Box p='5'>
       <Heading mb={4}>{coin.name}</Heading>
-      <Text pb='5' fontSize="xl">Current Price: {coin.current_price}</Text>
-      <Text pb='5' fontSize="xl">Price Change: {priceChange.toFixed(2)}%</Text>
-      <Text pb='5' fontSize="xl">Historical High: {historicalHigh}</Text>
-      <Text pb='5' fontSize="xl">Historical Low: {historicalLow}</Text>
-      
-      <div ref={chartContainerRef} style={{ width: '100%', height: '300px' }} />
+      <Flex justify="space-between">
+        <Stat>
+          <StatLabel>Current Price</StatLabel>
+          <StatNumber fontSize="2xl">{coin.current_price}</StatNumber>
+        </Stat>
+        <Stat>
+          <StatLabel>Price Change</StatLabel>
+          <StatNumber fontSize="sm" color={priceChange > 0 ? 'green.500' : 'red.500'}>{priceChange.toFixed(2)}%</StatNumber>
+        </Stat>
+        <Stat>
+          <StatLabel>Historical High</StatLabel>
+          <StatNumber fontSize="sm">{historicalHigh}</StatNumber>
+        </Stat>
+        <Stat>
+          <StatLabel>Historical Low</StatLabel>
+          <StatNumber fontSize="sm">{historicalLow}</StatNumber>
+        </Stat>
+      </Flex>
+      <Box mt={4} mb={4}>
+        <HStack>
+          <Box w='50%'>
+            <Text fontSize='sm' p='5' color='gray.500'>{coin.bio}</Text>
+          </Box>
+          <div ref={chartContainerRef} style={{ width: '50%', height: '300px', marginTop: '1px' }} />
+        </HStack>
 
-      <Text fontSize='sm' p='5' color='gray.500'>{coin.bio}</Text>
+      </Box>
     </Box>
+
   );
 };
 
