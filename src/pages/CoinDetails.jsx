@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { createChart } from 'lightweight-charts';
-import { Box, Text, Heading, Spinner, Flex, Stat, StatLabel, StatNumber, VStack, HStack, Image, Grid, StatHelpText, StatArrow } from '@chakra-ui/react';
+import { Box, Text, Heading, Spinner, Flex, Stat, StatLabel, StatNumber, Image, Grid, StatHelpText, StatArrow, HStack, VStack } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 const CoinDetails = () => {
@@ -109,21 +109,23 @@ const CoinDetails = () => {
             <StatLabel>Current Price</StatLabel>
             <StatNumber fontSize="2xl">{coin.current_price}</StatNumber>
           </Stat>
-          {/* Display the mascot image */}
-
-            <Image src={imagePath} alt={`${coin.name} Mascot`} boxSize="100px" />
-          <HStack spacing="5px">
-          <Image src={logoImagePath} alt={`${coin.name} Logo`} boxSize="75px" />
-            <Stat mb='2'>{coin.symbol}</Stat>
-          </HStack>
           <Stat>
-            <StatLabel>Price Change</StatLabel>
+
 
             <StatHelpText>
-              <StatArrow type={priceChange > 0 ? 'increase' : 'decrease'} />
-              <StatNumber fontSize="xs" color={priceChange > 0 ? 'green.500' : 'red.500'}>{priceChange.toFixed(2)}%</StatNumber>
+              <HStack>
+                <StatArrow type={priceChange > 0 ? 'increase' : 'decrease'} />
+                <StatNumber fontSize="xs" color={priceChange > 0 ? 'green.500' : 'red.500'}>{priceChange.toFixed(2)}%</StatNumber>
+            <Stat mb='2'>{coin.symbol}</Stat>
+              </HStack>
             </StatHelpText>
           </Stat>
+          {/* Display the mascot image */}
+            <Image src={logoImagePath} alt={`${coin.name} Logo`} boxSize="150px" />
+
+          <HStack spacing="5px">
+          <Image src={imagePath} alt={`${coin.name} Mascot`} boxSize="150px" />
+          </HStack>
 
           <Stat>
             <StatHelpText>Highest</StatHelpText>
@@ -133,14 +135,14 @@ const CoinDetails = () => {
             <StatHelpText>Lowest</StatHelpText>
             <StatNumber fontSize="xs">{historicalLow}</StatNumber>
           </Stat>
-          <Image src={corporateImagePath} alt={`${coin.name} Corporate`} boxSize="100px" marginTop="5" borderRadius='10%' />
+          <Image src={corporateImagePath} alt={`${coin.name} Corporate`} boxSize="150px" marginTop="5" borderRadius='10%' />
         </VStack>
 
         <Box flex="1">
           <HStack spacing="5px">
             <Text fontSize='sm' mb='5' color='gray.500' mr='3'>{coin.bio}</Text>
             {/* Display the corporate photo */}
-            
+
           </HStack>
           <div ref={chartContainerRef} style={{ width: '100%', height: '300px', marginTop: '1px' }} />
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { Box, Text, Heading, Spinner, VStack, ListItem } from '@chakra-ui/react';
+import { Box, Text, Heading, Spinner, VStack, List, ListItem } from '@chakra-ui/react'; // <-- import List
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -48,12 +48,16 @@ const Portfolio = () => {
       <Heading mb={4}>{user.username}'s Portfolio</Heading>
       <Text fontSize="lg">Available Funds: {user.funds}</Text>
       <VStack spacing={4} align="start">
-        {userCoins.map(coin => (
-          <ListItem key={coin.id}>
-            <Text fontSize="lg">{coin.name}: {coin.amount}</Text>
+        <List>   {/* <-- Use List component here */}
+          {userCoins.map(coin => (
+            <ListItem key={coin.id}>
+              <Text fontSize="lg">{coin.name}: {coin.amount}</Text>
+            </ListItem>
+          ))}
+          <ListItem>
+            <Text fontSize="lg">Total Value: {userCoins.reduce((total, coin) => total + coin.amount * coin.current_price, 0)}</Text>
           </ListItem>
-        ))}
-        <Text fontSize="lg">Total Value: {userCoins.reduce((total, coin) => total + coin.amount * coin.current_price, 0)}</Text>
+        </List>
       </VStack>
     </Box>
   );

@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Badge, CircularProgress, Text } from '@chakra-ui/react';
+import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Badge, CircularProgress, Text, useDisclosure, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 function CoinList() {
   const [coins, setCoins] = useState([]);
   const [coinHistory, setCoinHistory] = useState({});
   const [isLoading, setIsLoading] = useState(true); // Initialize loading state
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedCoin, setSelectedCoin] = useState(null);
+  const [amountToBuy, setAmountToBuy] = useState(0);
+  const { user } = useContext(AuthContext);
 
   const fetchPriceHistory = async (coin_id) => {
     try {
@@ -39,7 +44,7 @@ function CoinList() {
   useEffect(() => {
     const fetchAllPriceHistories = async () => {
       const coinsWithHistory = await Promise.all(coins.map((coin) => fetchPriceHistory(coin.coin_id)));
-      setCoinHistory(coinsWithHistory.reduce((acc, coin, index) => ({...acc, [coins[index].coin_id]: coin}), {}));
+      setCoinHistory(coinsWithHistory.reduce((acc, coin, index) => ({ ...acc, [coins[index].coin_id]: coin }), {}));
     };
 
     fetchAllPriceHistories();
@@ -48,14 +53,56 @@ function CoinList() {
   }, [coins]);
 
   if (isLoading) {
-    return <CircularProgress isIndeterminate color="green" />; 
+    return <CircularProgress isIndeterminate color="green" />;
   }
 
   const totalMarketValue = coins.reduce((total, coin) => total + parseFloat(coin.current_price), 0);
 
+  const handleBuyClick = (coin) => {
+    setSelectedCoin(coin);
+  };
+
+  const handleFormBuyClick = () => {
+    if (selectedCoin) {
+      onOpen();
+    }
+  };
+
+  const handleBuyConfirm = async () => {
+    console.log('Buying coin...user val: ', user);
+    try {
+      const response = await axios.post(`http://localhost:9090/api/usercoins/buy`, {
+        user_id: user.user_id,
+        coin_id: selectedCoin.coin_id,
+        amount: amountToBuy
+      });
+  
+      if (response.status === 200) {
+        // Handle successful purchase...
+        console.log(response.data.message);
+        // You could display a success message, update the user's portfolio in your UI, etc.
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        // Handle insufficient funds...
+        console.error(error.response.data.message);
+        // You could display an error message to the user, etc.
+      } else {
+        // Handle other errors...
+        console.error('An error occurred while processing your request.', error);
+      }
+    }
+  
+    onClose();
+  };
+    
+  const handleInputChange = (event) => {
+    setAmountToBuy(event.target.value);
+  };
 
   return (
-    <Box p='5'>
+    <Flex>
+    <Box flex="1" p='5'>
       <Text fontSize="2xl" marginBottom="5">Total Market Value: {totalMarketValue.toFixed(2)}</Text>
       <Table variant="simple">
         <Thead>
@@ -80,13 +127,46 @@ function CoinList() {
                 }
               </Td>
               <Td>
-                <Button size="sm" colorScheme="teal">Buy</Button>
+                <Button size="sm" colorScheme="teal" onClick={() => handleBuyClick(coin)}>Buy</Button>
               </Td>
             </Tr>
           ))}
         </Tbody>
       </Table>
     </Box>
+
+    <Box flex="1">
+      <Text fontSize="2xl">Buy Coins</Text>
+      <FormControl mt={4}>
+        <FormLabel>Coin</FormLabel>
+        <Input value={selectedCoin ? selectedCoin.name : ''} isDisabled />
+      </FormControl>
+
+      <FormControl mt={4}>
+        <FormLabel>Amount</FormLabel>
+        <Input placeholder="Enter Amount" value={amountToBuy} onChange={handleInputChange} />
+      </FormControl>
+      <Button colorScheme="teal" mt={4} onClick={handleFormBuyClick}>Buy</Button>
+    </Box>
+
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Confirm Purchase</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          Are you sure you want to purchase {amountToBuy} {selectedCoin?.name}?
+        </ModalBody>
+
+        <ModalFooter>
+          <Button colorScheme="blue" mr={3} onClick={handleBuyConfirm}>
+            Confirm
+          </Button>
+          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  </Flex>
   );
 }
 
