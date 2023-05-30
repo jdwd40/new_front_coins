@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Badge, CircularProgress } from '@chakra-ui/react';
+import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Badge, CircularProgress, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 function CoinList() {
@@ -51,8 +51,12 @@ function CoinList() {
     return <CircularProgress isIndeterminate color="green" />; 
   }
 
+  const totalMarketValue = coins.reduce((total, coin) => total + parseFloat(coin.current_price), 0);
+
+
   return (
     <Box p='5'>
+      <Text fontSize="2xl" marginBottom="5">Total Market Value: {totalMarketValue.toFixed(2)}</Text>
       <Table variant="simple">
         <Thead>
           <Tr>

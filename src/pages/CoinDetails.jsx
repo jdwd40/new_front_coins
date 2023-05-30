@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { createChart } from 'lightweight-charts';
-import { Box, Text, Heading, Spinner, Flex, Stat, StatLabel, StatNumber, VStack, HStack } from '@chakra-ui/react';
+import { Box, Text, Heading, Spinner, Flex, Stat, StatLabel, StatNumber, VStack, HStack, Image, Grid } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 
 const CoinDetails = () => {
@@ -76,6 +76,15 @@ const CoinDetails = () => {
     return null;
   }
 
+  // Construct the mascot image path using the coin name (in lowercase)
+  const imageName = `${coin.name.toLowerCase()}_mascot.png`;
+  const imagePath = `/images/${imageName}`;
+
+  // Corporate photo
+  const corporateImageName = `${coin.name.toLowerCase()}_cp.png`;
+  const corporateImagePath = `/images/${corporateImageName}`;
+
+
   const lastPrice = priceHistory[priceHistory.length - 1].price;
   const secondLastPrice = priceHistory[priceHistory.length - 2].price;
   const priceChange = ((lastPrice - secondLastPrice) / secondLastPrice) * 100;
@@ -84,37 +93,43 @@ const CoinDetails = () => {
   const historicalLow = Math.min(...priceHistory.map(entry => entry.price));
 
   return (
-    <Box p='5'>
-      <Heading mb={4}>{coin.name}</Heading>
-      <Flex justify="space-between">
-        <Stat>
-          <StatLabel>Current Price</StatLabel>
-          <StatNumber fontSize="2xl">{coin.current_price}</StatNumber>
-        </Stat>
-        <Stat>
-          <StatLabel>Price Change</StatLabel>
-          <StatNumber fontSize="sm" color={priceChange > 0 ? 'green.500' : 'red.500'}>{priceChange.toFixed(2)}%</StatNumber>
-        </Stat>
-        <Stat>
-          <StatLabel>Historical High</StatLabel>
-          <StatNumber fontSize="sm">{historicalHigh}</StatNumber>
-        </Stat>
-        <Stat>
-          <StatLabel>Historical Low</StatLabel>
-          <StatNumber fontSize="sm">{historicalLow}</StatNumber>
-        </Stat>
+
+    <Box p='4'>
+      <Heading mb={5}>{coin.name}</Heading>
+<Stat mb='2'>{coin.symbol}</Stat>
+      <Flex direction={{ base: "column", md: "row" }} align="start">
+        <VStack spacing="5px" align="start" marginRight={{ base: "0", md: "10" }}>
+          <Stat>
+            <StatLabel>Current Price</StatLabel>
+            <StatNumber fontSize="2xl">{coin.current_price}</StatNumber>
+          </Stat>
+          {/* Display the mascot image */}
+          <Image src={imagePath} alt={`${coin.name} Mascot`} boxSize="100px" />
+          <Stat>
+            <StatLabel>Price Change</StatLabel>
+            <StatNumber fontSize="xs" color={priceChange > 0 ? 'green.500' : 'red.500'}>{priceChange.toFixed(2)}%</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Highest</StatLabel>
+            <StatNumber fontSize="xs">{historicalHigh}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>Lowest</StatLabel>
+            <StatNumber fontSize="xs">{historicalLow}</StatNumber>
+          </Stat>
+        </VStack>
+
+        <Box flex="1">
+          <HStack spacing="5px">
+            <Text fontSize='sm' mb='5' color='gray.500' mr='3'>{coin.bio}</Text>
+            {/* Display the corporate photo */}
+            <Image src={corporateImagePath} alt={`${coin.name} Corporate`} boxSize="200px" marginTop="5" borderRadius='10%'/>
+          </HStack>
+          <div ref={chartContainerRef} style={{ width: '100%', height: '300px', marginTop: '1px' }} />
+
+        </Box>
       </Flex>
-      <Box mt={4} mb={4}>
-        <HStack>
-          <Box w='50%'>
-            <Text fontSize='sm' p='5' color='gray.500'>{coin.bio}</Text>
-          </Box>
-          <div ref={chartContainerRef} style={{ width: '50%', height: '300px', marginTop: '1px' }} />
-        </HStack>
-
-      </Box>
     </Box>
-
   );
 };
 

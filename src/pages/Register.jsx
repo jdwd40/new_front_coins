@@ -47,6 +47,12 @@ function Register() {
         password
       });
       // Handle successful registration
+      // log user in and return user to coinslist screen
+      const { token } = response.data;
+      // goto coinList
+      window.location.href = '/coins';
+      //
+      
       console.log(response.data);
       setError('');
     } catch (e) {

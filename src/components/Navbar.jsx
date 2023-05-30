@@ -88,7 +88,7 @@ function Navigation() {
           to="/coins"
           colorScheme={'teal'}
           variant={'link'}
-          bg={location.pathname === '/coins' ? buttonBg : null}
+          bg={location.pathname === '/portfolio' ? buttonBg : null}
         >
           Coins
         </Button>
