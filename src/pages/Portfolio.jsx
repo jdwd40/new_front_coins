@@ -9,11 +9,11 @@ const Portfolio = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-   // Get user from context
-   const user = useContext(AuthContext);
-   console.log(user);
+  // Get user from context
+  const { user } = useContext(AuthContext);
+  console.log(user);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchUserCoins = async () => {
       setIsLoading(true);
       try {
@@ -29,8 +29,7 @@ const Portfolio = () => {
     };
 
     fetchUserCoins();
-}, [user]);
-
+  }, [user]);
 
   if (isLoading) {
     return <Spinner />;
@@ -40,15 +39,21 @@ const Portfolio = () => {
     return <Text>Error: {error}</Text>;
   }
 
+  if (!user || !userCoins) {
+    return null;
+  }
+
   return (
     <Box p='5'>
-      <Heading mb={4}>Your Portfolio</Heading>
+      <Heading mb={4}>{user.username}'s Portfolio</Heading>
+      <Text fontSize="lg">Available Funds: {user.funds}</Text>
       <VStack spacing={4} align="start">
         {userCoins.map(coin => (
           <ListItem key={coin.id}>
             <Text fontSize="lg">{coin.name}: {coin.amount}</Text>
           </ListItem>
         ))}
+        <Text fontSize="lg">Total Value: {userCoins.reduce((total, coin) => total + coin.amount * coin.current_price, 0)}</Text>
       </VStack>
     </Box>
   );

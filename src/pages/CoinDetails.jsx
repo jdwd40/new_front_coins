@@ -84,6 +84,11 @@ const CoinDetails = () => {
   const corporateImageName = `${coin.name.toLowerCase()}_cp.png`;
   const corporateImagePath = `/images/${corporateImageName}`;
 
+  // Logo
+  const logoImageName = `${coin.name.toLowerCase()}_logo.png`;
+  const logoImagePath = `/images/${logoImageName}`;
+
+
 
   const lastPrice = priceHistory[priceHistory.length - 1].price;
   const secondLastPrice = priceHistory[priceHistory.length - 2].price;
@@ -95,7 +100,9 @@ const CoinDetails = () => {
   return (
 
     <Box p='4'>
-      <Heading mb={5}>{coin.name}</Heading>
+      <Heading mb={5}>
+        {coin.name}
+      </Heading>
       <Flex direction={{ base: "column", md: "row" }} align="start">
         <VStack spacing="5px" align="start" marginRight={{ base: "0", md: "10" }}>
           <Stat>
@@ -104,8 +111,11 @@ const CoinDetails = () => {
           </Stat>
           {/* Display the mascot image */}
 
-          <Image src={imagePath} alt={`${coin.name} Mascot`} boxSize="100px" />
-          <Stat mb='2'>{coin.symbol}</Stat>
+            <Image src={imagePath} alt={`${coin.name} Mascot`} boxSize="100px" />
+          <HStack spacing="5px">
+          <Image src={logoImagePath} alt={`${coin.name} Logo`} boxSize="75px" />
+            <Stat mb='2'>{coin.symbol}</Stat>
+          </HStack>
           <Stat>
             <StatLabel>Price Change</StatLabel>
 
@@ -123,13 +133,14 @@ const CoinDetails = () => {
             <StatHelpText>Lowest</StatHelpText>
             <StatNumber fontSize="xs">{historicalLow}</StatNumber>
           </Stat>
+          <Image src={corporateImagePath} alt={`${coin.name} Corporate`} boxSize="100px" marginTop="5" borderRadius='10%' />
         </VStack>
 
         <Box flex="1">
           <HStack spacing="5px">
             <Text fontSize='sm' mb='5' color='gray.500' mr='3'>{coin.bio}</Text>
             {/* Display the corporate photo */}
-            <Image src={corporateImagePath} alt={`${coin.name} Corporate`} boxSize="200px" marginTop="5" borderRadius='10%' />
+            
           </HStack>
           <div ref={chartContainerRef} style={{ width: '100%', height: '300px', marginTop: '1px' }} />
 
