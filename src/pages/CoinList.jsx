@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Badge, CircularProgress, Text, useDisclosure, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import { BuyCoin } from '../components/BuyCoin';
 
 function CoinList() {
   const [coins, setCoins] = useState([]);
@@ -76,7 +77,7 @@ function CoinList() {
         coin_id: selectedCoin.coin_id,
         amount: amountToBuy
       });
-  
+
       if (response.status === 200) {
         // Handle successful purchase...
         console.log(response.data.message);
@@ -92,81 +93,62 @@ function CoinList() {
         console.error('An error occurred while processing your request.', error);
       }
     }
-  
+
     onClose();
   };
-    
+
   const handleInputChange = (event) => {
     setAmountToBuy(event.target.value);
   };
 
   return (
     <Flex>
-    <Box flex="1" p='5'>
-      <Text fontSize="2xl" marginBottom="5">Total Market Value: {totalMarketValue.toFixed(2)}</Text>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Coin</Th>
-            <Th>Price</Th>
-            <Th>Price Change</Th>
-            <Th>Action</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {coins.map((coin) => (
-            <Tr key={coin.coin_id}>
-              <Td><Link to={`/coin/${coin.coin_id}`}>{coin.name}</Link></Td>
-              <Td>{coin.current_price}</Td>
-              <Td>
-                {coinHistory[coin.coin_id] !== undefined 
-                  ? coinHistory[coin.coin_id] > 0 
-                    ? <Badge colorScheme="green">+{coinHistory[coin.coin_id].toFixed(2)}%</Badge>
-                    : <Badge colorScheme="red">{coinHistory[coin.coin_id].toFixed(2)}%</Badge>
-                  : <Badge>N/A</Badge>
-                }
-              </Td>
-              <Td>
-                <Button size="sm" colorScheme="teal" onClick={() => handleBuyClick(coin)}>Buy</Button>
-              </Td>
+      <Box flex="1" p='5'>
+        <Text fontSize="2xl" marginBottom="5">Total Market Value: {totalMarketValue.toFixed(2)}</Text>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Coin</Th>
+              <Th>Price</Th>
+              <Th>Price Change</Th>
+              <Th>Action</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </Box>
+          </Thead>
+          <Tbody>
+            {coins.map((coin) => (
+              <Tr key={coin.coin_id}>
+                <Td><Link to={`/coin/${coin.coin_id}`}>{coin.name}</Link></Td>
+                <Td>{coin.current_price}</Td>
+                <Td>
+                  {coinHistory[coin.coin_id] !== undefined
+                    ? coinHistory[coin.coin_id] > 0
+                      ? <Badge colorScheme="green">+{coinHistory[coin.coin_id].toFixed(2)}%</Badge>
+                      : <Badge colorScheme="red">{coinHistory[coin.coin_id].toFixed(2)}%</Badge>
+                    : <Badge>N/A</Badge>
+                  }
+                </Td>
+                <Td>
+                  <Button size="sm" colorScheme="teal" onClick={() => handleBuyClick(coin)}>Buy</Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
-    <Box flex="1">
-      <Text fontSize="2xl">Buy Coins</Text>
-      <FormControl mt={4}>
-        <FormLabel>Coin</FormLabel>
-        <Input value={selectedCoin ? selectedCoin.name : ''} isDisabled />
-      </FormControl>
-
-      <FormControl mt={4}>
-        <FormLabel>Amount</FormLabel>
-        <Input placeholder="Enter Amount" value={amountToBuy} onChange={handleInputChange} />
-      </FormControl>
-      <Button colorScheme="teal" mt={4} onClick={handleFormBuyClick}>Buy</Button>
-    </Box>
-
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Confirm Purchase</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          Are you sure you want to purchase {amountToBuy} {selectedCoin?.name}?
-        </ModalBody>
-
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleBuyConfirm}>
-            Confirm
-          </Button>
-          <Button variant="ghost" onClick={onClose}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  </Flex>
+      <Box flex="1">
+        <BuyCoin
+        selectedCoin={selectedCoin} 
+        amountToBuy={amountToBuy} 
+        handleFormBuyClick={handleFormBuyClick} 
+        handleBuyConfirm={handleBuyConfirm} 
+        handleInputChange={handleInputChange} 
+        onClose={onClose} 
+        isOpen={isOpen} 
+      />
+      </Box>
+      
+    </Flex>
   );
 }
 

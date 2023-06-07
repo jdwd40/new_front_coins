@@ -88,8 +88,6 @@ const CoinDetails = () => {
   const logoImageName = `${coin.name.toLowerCase()}_logo.png`;
   const logoImagePath = `/images/${logoImageName}`;
 
-
-
   const lastPrice = priceHistory[priceHistory.length - 1].price;
   const secondLastPrice = priceHistory[priceHistory.length - 2].price;
   const priceChange = ((lastPrice - secondLastPrice) / secondLastPrice) * 100;

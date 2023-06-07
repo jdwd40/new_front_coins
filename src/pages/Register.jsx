@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -8,16 +8,21 @@ import {
   FormLabel,
   Input,
   Heading,
-  Text
+  Text,
+  Toast,
+  useToast
 } from '@chakra-ui/react';
 
+import { AuthContext } from '../contexts/AuthContext';
+
 function Register() {
+  const { setUser } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-
+  const toast = useToast();
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -48,11 +53,22 @@ function Register() {
       });
       // Handle successful registration
       // log user in and return user to coinslist screen
+
       const { token } = response.data;
       // goto coinList
-      window.location.href = '/coins';
+      setUser(response.data);
+
+      toast({
+        title: "Account created.",
+        description: "We've created your account.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+
+      window.location.href = '/';
       //
-      
+
       console.log(response.data);
       setError('');
     } catch (e) {
