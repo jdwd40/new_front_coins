@@ -1,13 +1,18 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Box, Heading, Text } from '@chakra-ui/react';
 import { AuthContext } from '../contexts/AuthContext';
 
 const UserFunds = () => {
   const { user } = useContext(AuthContext);
-  // change user.funds from a string to a number and round to 2 decimal places
-     const [funds, setFunds] = useState(parseFloat(user.funds).toFixed(2));
+  const [funds, setFunds] = useState(null);
 
-  if (!user) {
+  useEffect(() => {
+    if (user && user.funds) {
+      setFunds(parseFloat(user.funds).toFixed(2));
+    }
+  }, [user]);
+
+  if (!user || funds === null) {
     return null;
   }
 

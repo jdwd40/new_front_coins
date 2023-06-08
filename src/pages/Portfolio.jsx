@@ -135,10 +135,11 @@ const Portfolio = () => {
 
     onClose();
   };
-
+  
   return (
     <Box p={[2, 4, 6]}>
     <Stack direction={isLargerThan1280 ? "row" : "column"} spacing={4}>
+      <UserFunds />
       <Box flex="1" boxShadow="md" p={4} borderRadius="md">
         <Heading mb={4} size="lg">Your Coins</Heading>
         <Table variant="simple">
@@ -169,7 +170,6 @@ const Portfolio = () => {
         </Table>
       </Box>
       <Box flex="1" boxShadow="md" p={4} borderRadius="md">
-        <UserFunds />
         <Heading mb={4} size="lg">Sell Coins</Heading>
         <SellCoin 
           selectedCoin={coinToSell}
