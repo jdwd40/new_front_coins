@@ -4,6 +4,7 @@ import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Badge, CircularProgress, 
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { BuyCoin } from '../components/BuyCoin';
+import UserFunds from '../components/UserFunds';
 
 function CoinList() {
   const [coins, setCoins] = useState([]);
@@ -137,6 +138,7 @@ function CoinList() {
       </Box>
 
       <Box flex="1">
+        <UserFunds />
         <BuyCoin
         selectedCoin={selectedCoin} 
         amountToBuy={amountToBuy} 

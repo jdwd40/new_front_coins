@@ -69,7 +69,7 @@ function Navigation() {
         variant={'link'}
         bg={location.pathname === '/' ? buttonBg : null}
       >
-        Home
+        Buy Coins
       </Button>
       {!user && (
         <Button
@@ -85,12 +85,12 @@ function Navigation() {
       {user && (
         <Button
           as={RouterLink}
-          to="/coins"
+          to="/portfolio"
           colorScheme={'teal'}
           variant={'link'}
           bg={location.pathname === '/portfolio' ? buttonBg : null}
         >
-          Coins
+          Portfolio
         </Button>
       )}
       {user && (

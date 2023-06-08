@@ -24,10 +24,13 @@ import {
   ModalFooter,
   ModalCloseButton,
   ModalBody,
+  Stack,
+  useMediaQuery
 } from '@chakra-ui/react';
 import { AuthContext } from '../contexts/AuthContext';
 import  PortfolioList from '../components/PortfolioList';
 import  SellCoin from '../components/SellCoin';
+import UserFunds from '../components/UserFunds';
 
 const Portfolio = () => {
   const [userCoins, setUserCoins] = useState([]);
@@ -37,6 +40,8 @@ const Portfolio = () => {
   const [amountToSell, setAmountToSell] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useContext(AuthContext);
+
+  const [isLargerThan1280] = useMediaQuery("(min-width: 1280px)");
 
   useEffect(() => {
     const fetchUserCoins = async () => {
@@ -132,22 +137,52 @@ const Portfolio = () => {
   };
 
   return (
-    <Flex>
-    <Box flex="1">
-      <PortfolioList user={user} userCoins={userCoins} onSellClick={handleSellClick}/>
-    </Box>
-    <Box flex="1">
-      <SellCoin 
-        selectedCoin={coinToSell}
-        amountToSell={amountToSell}
-        handleFormSellClick={handleFormSellClick}
-        handleSellConfirm={handleSellConfirm}
-        handleInputChange={handleInputChange}
-        onClose={onClose}
-        isOpen={isOpen} 
-      />
-    </Box>
-  </Flex>
+    <Box p={[2, 4, 6]}>
+    <Stack direction={isLargerThan1280 ? "row" : "column"} spacing={4}>
+      <Box flex="1" boxShadow="md" p={4} borderRadius="md">
+        <Heading mb={4} size="lg">Your Coins</Heading>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Coin</Th>
+              <Th>Symbol</Th>
+              <Th isNumeric>Amount</Th>
+              <Th isNumeric>Current Price</Th>
+              <Th isNumeric>Total Value</Th>
+              <Th isNumeric>Action</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {userCoins.map(coin => (
+              <Tr key={coin.coin_id}>
+                <Td>{coin.name}</Td>
+                <Td fontWeight='bold'>{coin.symbol.toUpperCase()}</Td>
+                <Td isNumeric>{coin.amount}</Td>
+                <Td isNumeric>{coin.current_price}</Td>
+                <Td isNumeric>{(coin.current_price * coin.amount).toFixed(2)}</Td>
+                <Td>
+                  <Button colorScheme="blue" size="sm" onClick={() => handleSellClick(coin)}>Sell</Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
+      <Box flex="1" boxShadow="md" p={4} borderRadius="md">
+        <UserFunds />
+        <Heading mb={4} size="lg">Sell Coins</Heading>
+        <SellCoin 
+          selectedCoin={coinToSell}
+          amountToSell={amountToSell}
+          handleFormSellClick={handleFormSellClick}
+          handleSellConfirm={handleSellConfirm}
+          handleInputChange={handleInputChange}
+          onClose={onClose}
+          isOpen={isOpen} 
+        />
+      </Box>
+    </Stack>
+  </Box>
   );
 };
 
