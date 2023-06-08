@@ -25,7 +25,8 @@ import {
   ModalCloseButton,
   ModalBody,
   Stack,
-  useMediaQuery
+  useMediaQuery,
+  useToast
 } from '@chakra-ui/react';
 import { AuthContext } from '../contexts/AuthContext';
 import  PortfolioList from '../components/PortfolioList';
@@ -41,41 +42,39 @@ const Portfolio = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useContext(AuthContext);
 
+  const toast = useToast();
   const [isLargerThan1280] = useMediaQuery("(min-width: 1280px)");
 
-  useEffect(() => {
-    const fetchUserCoins = async () => {
-      setIsLoading(true);
-      try {
-        if (user) {
-          // Get all coins
-          const allCoinsRes = await axios.get(`http://localhost:9090/api/coins`);
-          const allCoins = allCoinsRes.data.coins;
-          
-          // Get user coins
-          const userCoinsRes = await axios.get(`http://localhost:9090/api/usercoins/${user.user_id}`);
-          const userCoinsData = userCoinsRes.data.userCoins;
-          
-          // Find the user's coins within all coins
-          const userCoins = userCoinsData.map(userCoin => {
-            const coinDetails = allCoins.find(coin => coin.coin_id === userCoin.coin_id);
-            return {
-              ...userCoin,
-              name: coinDetails.name,
-              symbol: coinDetails.symbol,
-              current_price: coinDetails.current_price
-            };
-          });
+  const fetchUserCoins = async () => {
+    setIsLoading(true);
+    try {
+      if (user) {
+        const allCoinsRes = await axios.get(`http://localhost:9090/api/coins`);
+        const allCoins = allCoinsRes.data.coins;
+        
+        const userCoinsRes = await axios.get(`http://localhost:9090/api/usercoins/${user.user_id}`);
+        const userCoinsData = userCoinsRes.data.userCoins;
+        
+        const userCoins = userCoinsData.map(userCoin => {
+          const coinDetails = allCoins.find(coin => coin.coin_id === userCoin.coin_id);
+          return {
+            ...userCoin,
+            name: coinDetails.name,
+            symbol: coinDetails.symbol,
+            current_price: coinDetails.current_price
+          };
+        });
 
-          setUserCoins(userCoins);
-        }
-        setError(null);
-      } catch (e) {
-        setError(e.toString());
+        setUserCoins(userCoins);
       }
-      setIsLoading(false);
-    };
+      setError(null);
+    } catch (e) {
+      setError(e.toString());
+    }
+    setIsLoading(false);
+  };
 
+  useEffect(() => {
     fetchUserCoins();
   }, [user]);
 
@@ -121,11 +120,35 @@ const Portfolio = () => {
         // Handle successful sell...
         console.log(response.data.message);
         // You could display a success message, update the user's portfolio in your UI, etc.
+         // Display a success toast notification
+      toast({
+        title: "Transaction successful.",
+        description: `Sold ${amountToSell} of ${coinToSell.name}.`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      })
+       // Refresh user's coins
+       fetchUserCoins();
+
+       // Clear the sell form
+       setCoinToSell(null);
+       setAmountToSell(0);
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
         // Handle error...
         console.error(error.response.data.message);
+        if (error.response.data.message === 'Insufficient coins.') {
+          // Display an error toast notification
+          toast({
+            title: "Insufficient coins.",
+            description: "You don't have enough coins to complete this transaction.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          })
+        }
         // You could display an error message to the user, etc.
       } else {
         // Handle other errors...
