@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Badge, CircularProgress, Text, useDisclosure, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, Input, useToast } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import  BuyCoin from '../components/BuyCoin';
+import BuyCoin from '../components/BuyCoin';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -14,14 +14,14 @@ function CoinList() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedCoin, setSelectedCoin] = useState(null);
   const [amountToBuy, setAmountToBuy] = useState(0);
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   const toast = useToast();
   const navigate = useNavigate();
-  
+
   const fetchPriceHistory = async (coin_id) => {
     try {
-      const response = await axios.get(`http://localhost:9090/api/history/${coin_id}`);
+      const response = await axios.get(`http://192.168.0.53:9090/api/history/${coin_id}`);
       const history = response.data.priceHistory;
       const lastEntry = history[history.length - 1];
       const secondLastEntry = history[history.length - 2];
@@ -35,7 +35,7 @@ function CoinList() {
   useEffect(() => {
     const fetchCoins = async () => {
       try {
-        const response = await axios.get('http://localhost:9090/api/coins');
+        const response = await axios.get('http://192.168.0.53:9090/api/coins');
         const fetchedCoins = response.data.coins;
         setCoins(fetchedCoins);
         setIsLoading(false);
@@ -76,18 +76,27 @@ function CoinList() {
 
   const handleBuyConfirm = async () => {
     console.log('Buying coin...user val: ', user);
-    
+
     try {
-      const response = await axios.post(`http://localhost:9090/api/usercoins/buy`, {
+      const response = await axios.post(`http://192.168.0.53:9090/api/usercoins/buy`, {
         user_id: user.user_id,
         coin_id: selectedCoin.coin_id,
         amount: amountToBuy
       });
-  
+
       if (response.status === 200) {
         // Handle successful purchase...
         console.log(response.data.message);
-        
+        // Update user's balance in context
+        const newUser = {
+          ...user,
+          funds: user.funds - (selectedCoin.current_price * amountToBuy)
+        };
+
+        setUser(newUser);  // setUser should be fetched from AuthContext
+        // patch blance user id
+        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { funds: newUser.funds });
+
         toast({
           title: "Transaction Successful",
           description: "You have successfully bought the coin",
@@ -95,7 +104,7 @@ function CoinList() {
           duration: 5000,
           isClosable: true,
         });
-  
+
         // Redirect to Portfolio page
         navigate('/portfolio');
       }
@@ -103,7 +112,7 @@ function CoinList() {
       if (error.response && error.response.status === 400) {
         // Handle insufficient funds...
         console.error(error.response.data.message);
-        
+
         toast({
           title: "Transaction Failed",
           description: "Insufficient funds",
@@ -111,13 +120,13 @@ function CoinList() {
           duration: 5000,
           isClosable: true,
         });
-  
+
         // Open a modal informing the user that they do not have enough funds
         // onOpenInsufficientFundsModal();
       } else {
         // Handle other errors...
         console.error('An error occurred while processing your request.', error);
-        
+
         toast({
           title: "Transaction Failed",
           description: "An error occurred while processing your request",
@@ -127,10 +136,10 @@ function CoinList() {
         });
       }
     }
-  
+
     onClose();
   };
-  
+
   const handleInputChange = (event) => {
     setAmountToBuy(event.target.value);
   };
@@ -172,16 +181,16 @@ function CoinList() {
 
       <Box flex="1">
         <BuyCoin
-        selectedCoin={selectedCoin} 
-        amountToBuy={amountToBuy} 
-        handleFormBuyClick={handleFormBuyClick} 
-        handleBuyConfirm={handleBuyConfirm} 
-        handleInputChange={handleInputChange} 
-        onClose={onClose} 
-        isOpen={isOpen} 
-      />
+          selectedCoin={selectedCoin}
+          amountToBuy={amountToBuy}
+          handleFormBuyClick={handleFormBuyClick}
+          handleBuyConfirm={handleBuyConfirm}
+          handleInputChange={handleInputChange}
+          onClose={onClose}
+          isOpen={isOpen}
+        />
       </Box>
-      
+
     </Flex>
   );
 }

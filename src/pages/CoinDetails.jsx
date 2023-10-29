@@ -19,7 +19,7 @@ const CoinDetails = () => {
     const fetchCoin = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`http://localhost:9090/api/coins/${coin_id}`);
+        const response = await axios.get(`http://192.168.0.53:9090/api/coins/${coin_id}`);
         setCoin(response.data.coin);
         setError(null);
       } catch (e) {
@@ -27,7 +27,7 @@ const CoinDetails = () => {
       }
 
       try {
-        const historyResponse = await axios.get(`http://localhost:9090/api/history/${coin_id}`);
+        const historyResponse = await axios.get(`http://192.168.0.53:9090/api/history/${coin_id}`);
         const allEntries = historyResponse.data.priceHistory;
         setPriceHistory(allEntries);
       } catch (e) {

@@ -24,7 +24,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        'http://localhost:9090/api/user/login',
+        'http://192.168.0.53:9090/api/user/login',
         { email, password }
       );
       // console.log(response);
@@ -33,7 +33,7 @@ function Login() {
       localStorage.setItem('token', response.token);
       // Set the user's data in the AuthContext
       const user = await axios.get(
-        `http://localhost:9090/api/user/getemail/${email}`
+        `http://192.168.0.53:9090/api/user/getemail/${email}`
       );
 
       setUser(user.data);

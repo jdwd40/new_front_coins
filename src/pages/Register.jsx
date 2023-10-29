@@ -46,7 +46,7 @@ function Register() {
 
     try {
       // Send POST request to server
-      const response = await axios.post('http://localhost:9090/api/user/register', {
+      const response = await axios.post('http://192.168.0.53:9090/api/user/register', {
         username,
         email,
         password
