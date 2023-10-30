@@ -95,7 +95,9 @@ function CoinList() {
 
         setUser(newUser);  // setUser should be fetched from AuthContext
         // patch blance user id
-        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { funds: newUser.funds });
+        const fundsNum = Number(newUser.funds);
+        console.log("fundsNum", fundsNum);
+        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { amount: fundsNum });
 
         toast({
           title: "Transaction Successful",

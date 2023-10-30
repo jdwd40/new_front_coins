@@ -16,7 +16,7 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const toast = useToast();
 
   const handleSubmit = async (event) => {
@@ -35,8 +35,13 @@ function Login() {
       const user = await axios.get(
         `http://192.168.0.53:9090/api/user/getemail/${email}`
       );
-
-      setUser(user.data);
+        console.log(user.data);
+        
+        const updatedUser = {
+          ...user.data,
+          funds: Number(user.data.funds),
+        };
+        setUser(updatedUser);
       // Show a success toast
       toast({
         title: 'Logged in successfully.',

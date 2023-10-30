@@ -121,12 +121,12 @@ const Portfolio = () => {
         console.log(response.data.message);
         const newUser = {
           ...user,
-          funds: user.funds - (coinToSell.current_price * amountToSell)
+          funds: user.funds + (coinToSell.current_price * amountToSell)
         };
 
         setUser(newUser);  // setUser should be fetched from AuthContext
         await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { funds: newUser.funds });
-        
+
         // Display a success toast notification
         toast({
           title: "Transaction successful.",
