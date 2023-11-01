@@ -1,19 +1,20 @@
 import React, { useContext } from 'react';
-import { 
-  Button, 
-  FormControl, 
-  FormLabel, 
-  Input, 
-  Modal, 
-  ModalBody, 
-  ModalCloseButton, 
-  ModalContent, 
-  ModalFooter, 
-  ModalHeader, 
-  ModalOverlay, 
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
   VStack,
-  Toast
+  Toast,
+  Box
 } from '@chakra-ui/react';
 
 import UserFunds from './UserFunds';
@@ -23,25 +24,52 @@ const BuyCoin = ({ selectedCoin, amountToBuy, handleFormBuyClick, handleBuyConfi
 
   return (
     <React.Fragment>
-      <Text fontSize="2xl">Buy Coins</Text>
-      
-      <UserFunds />
+      <Box
+        mb={4}
+        p={[2, 4, 6]}  // Responsive padding: [small screen, medium screen, large screen]
+        w={["100%", "80%", "60%"]}  // Responsive width
+        mx="auto"  // Centering Box
+        boxShadow="md"  // Adding a medium box shadow
+        borderWidth={1}  // Adding a border
+        borderRadius="md"  // Rounded corners
+      >
+        <Text fontSize={["md", "xl", "2xl"]} textAlign="center">Buy Coins</Text>  {/* Responsive font size */}
 
-      <FormControl mt={4}>
-        <FormLabel>Coin</FormLabel>
-        <Input value={selectedCoin ? selectedCoin.name : ''} isDisabled />
-      </FormControl>
+        <UserFunds />
 
-      <FormControl mt={4}>
-        <FormLabel>Amount</FormLabel>
-        <Input placeholder="Enter Amount" value={amountToBuy} onChange={handleInputChange} />
-      </FormControl>
+        <FormControl mt={4}>
+          <FormLabel fontSize={["sm", "md", "lg"]}>Coin</FormLabel>  {/* Responsive font size */}
+          <Input value={selectedCoin ? selectedCoin.name : ''} isDisabled />
+        </FormControl>
 
-      <Text mt={2}>
-        Total Cost: ${totalCost.toFixed(2)}
-      </Text>
+        <FormControl mt={4}>
+          <FormLabel fontSize={["sm", "md", "lg"]}>Amount</FormLabel>  {/* Responsive font size */}
+          <Input
+            placeholder="Enter Amount"
+            value={amountToBuy}
+            onChange={handleInputChange}
+            size={["sm", "md", "lg"]}  // Responsive input size
+          />
+        </FormControl>
 
-      <Button colorScheme="teal" mt={4} onClick={handleFormBuyClick}>Buy</Button>
+        <Text mt={['1', '2', '2']} fontSize={['sm', 'md', 'lg']}>
+          Current Price: ${selectedCoin ? selectedCoin.current_price : '-'}
+        </Text>
+
+        <Text mt={2} fontSize={["sm", "md", "lg"]}>  {/* Responsive font size */}
+          Total Cost: $ {totalCost.toFixed(2)}
+        </Text>
+
+        <Button
+          colorScheme="teal"
+          mt={4}
+          w="100%"  // Full width to occupy container
+          size={["sm", "md", "lg"]}  // Responsive button size
+          onClick={handleFormBuyClick}
+        >
+          Buy
+        </Button>
+      </Box>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

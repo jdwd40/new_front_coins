@@ -124,8 +124,10 @@ const Portfolio = () => {
           funds: user.funds + (coinToSell.current_price * amountToSell)
         };
 
+        const fundsNum = Number(newUser.funds);
+
         setUser(newUser);  // setUser should be fetched from AuthContext
-        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { funds: newUser.funds });
+        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { amount: fundsNum });
 
         // Display a success toast notification
         toast({

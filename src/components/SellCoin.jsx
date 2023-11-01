@@ -1,51 +1,62 @@
 import React from 'react';
-import { 
-  Box, 
-  Text, 
-  Button, 
-  FormControl, 
-  FormLabel, 
-  Input, 
-  Modal, 
-  ModalOverlay, 
-  ModalHeader, 
-  ModalFooter, 
-  ModalCloseButton, 
-  ModalContent, 
+import {
+  Box,
+  Text,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalOverlay,
+  ModalHeader,
+  ModalFooter,
+  ModalCloseButton,
+  ModalContent,
   ModalBody,
   VStack
 } from '@chakra-ui/react';
 
 import UserFunds from './UserFunds';
 
-export function SellCoin({selectedCoin, amountToSell, handleFormSellClick, handleSellConfirm, handleInputChange, onClose, isOpen}) {
+export function SellCoin({ selectedCoin, amountToSell, handleFormSellClick, handleSellConfirm, handleInputChange, onClose, isOpen }) {
   const totalEarnings = selectedCoin ? amountToSell * selectedCoin.current_price : 0;
 
   return (
-    <Box p='5'>
-      <Text fontSize="2xl">Sell Coins</Text>
-      
-      <UserFunds />
+    <>
+      <Box p={['2', '4', '5']} mb={[2, 4, 5]} w={['100%', '80%', '60%']} mx="auto">
+        <Text fontSize={['lg', 'xl', '2xl']} mb={[2, 3, 4]}>
+          Sell Coins
+        </Text>
 
-      <FormControl mt={4}>
-        <FormLabel>Coin</FormLabel>
-        <Input value={selectedCoin ? selectedCoin.name : ''} isDisabled />
-      </FormControl>
+        <UserFunds />
 
-      <FormControl mt={4}>
-        <FormLabel>Amount</FormLabel>
-        <Input placeholder="Enter Amount" value={amountToSell} onChange={handleInputChange} />
-      </FormControl>
-      
-      <Text mt={2}>
-        Current Price: ${selectedCoin ? selectedCoin.current_price : '-'}
-      </Text>
+        <FormControl mt={['2', '3', '4']}>
+          <FormLabel fontSize={['sm', 'md', 'lg']}>Coin</FormLabel>
+          <Input fontSize={['sm', 'md', 'lg']} value={selectedCoin ? selectedCoin.name : ''} isDisabled />
+        </FormControl>
 
-      <Text mt={2}>
-        Total Earnings: ${totalEarnings.toFixed(2)}
-      </Text>
+        <FormControl mt={['2', '3', '4']}>
+          <FormLabel fontSize={['sm', 'md', 'lg']}>Amount</FormLabel>
+          <Input
+            fontSize={['sm', 'md', 'lg']}
+            placeholder="Enter Amount"
+            value={amountToSell}
+            onChange={handleInputChange}
+          />
+        </FormControl>
 
-      <Button colorScheme="teal" mt={4} onClick={handleFormSellClick}>Sell</Button>
+        <Text mt={['1', '2', '2']} fontSize={['sm', 'md', 'lg']}>
+          Current Price: ${selectedCoin ? selectedCoin.current_price : '-'}
+        </Text>
+
+        <Text mt={['1', '2', '2']} fontSize={['sm', 'md', 'lg']}>
+          Total Earnings: ${totalEarnings.toFixed(2)}
+        </Text>
+
+        <Button colorScheme="teal" mt={['2', '3', '4']} fontSize={['sm', 'md', 'lg']} onClick={handleFormSellClick}>
+          Sell
+        </Button>
+      </Box>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -70,7 +81,8 @@ export function SellCoin({selectedCoin, amountToSell, handleFormSellClick, handl
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box>
+    </>
+
   );
 }
 

@@ -15,9 +15,17 @@ function CoinList() {
   const [selectedCoin, setSelectedCoin] = useState(null);
   const [amountToBuy, setAmountToBuy] = useState(0);
   const { user, setUser } = useContext(AuthContext);
+  const [prevTotalMarketValue, setPrevTotalMarketValue] = useState(0);
+  const [totalMarketValue, setTotalMarketValue] = useState(0);
+
+
 
   const toast = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setPrevTotalMarketValue(totalMarketValue);
+  }, [totalMarketValue]);
 
   const fetchPriceHistory = async (coin_id) => {
     try {
@@ -36,8 +44,12 @@ function CoinList() {
     const fetchCoins = async () => {
       try {
         const response = await axios.get('http://192.168.0.53:9090/api/coins');
-        const fetchedCoins = response.data.coins;
+        let fetchedCoins = response.data.coins;
+        fetchedCoins = fetchedCoins.sort((a, b) => parseFloat(b.current_price) - parseFloat(a.current_price));
         setCoins(fetchedCoins);
+        const calculatedTotalMarketValue = fetchedCoins.reduce((total, coin) => total + parseFloat(coin.current_price), 0);
+        setPrevTotalMarketValue(totalMarketValue);
+        setTotalMarketValue(calculatedTotalMarketValue);
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to fetch coins:', error);
@@ -45,7 +57,15 @@ function CoinList() {
     };
 
     fetchCoins();
+
+    // Set up an interval to fetch new data every 2 minutes (120000 milliseconds)
+    const intervalId = setInterval(fetchCoins, 10000);
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+
   }, []);
+
 
   useEffect(() => {
     const fetchAllPriceHistories = async () => {
@@ -62,7 +82,13 @@ function CoinList() {
     return <CircularProgress isIndeterminate color="green" />;
   }
 
-  const totalMarketValue = coins.reduce((total, coin) => total + parseFloat(coin.current_price), 0);
+  // useEffect(() => {
+  //   const totalMarketValue = coins.reduce((total, coin) => total + parseFloat(coin.current_price), 0);
+  //   if (prevTotalMarketValue !== totalMarketValue) {
+  //     setPrevTotalMarketValue(totalMarketValue);
+  //   }
+  // }, [coins, prevTotalMarketValue]);
+
 
   const handleBuyClick = (coin) => {
     setSelectedCoin(coin);
@@ -149,7 +175,11 @@ function CoinList() {
   return (
     <Flex>
       <Box flex="1" p='5'>
-        <Text fontSize="2xl" marginBottom="5">Total Market Value: {totalMarketValue.toFixed(2)}</Text>
+        <Text fontSize="2xl" marginBottom="5">
+          Total Market Value: {totalMarketValue.toFixed(2)}
+          {totalMarketValue > prevTotalMarketValue && <Badge colorScheme="green">⬆</Badge>}
+          {totalMarketValue < prevTotalMarketValue && <Badge colorScheme="red">⬇</Badge>}
+        </Text>
         <Table variant="simple">
           <Thead>
             <Tr>

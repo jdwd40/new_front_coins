@@ -3,6 +3,9 @@ import axios from 'axios';
 import { createChart } from 'lightweight-charts';
 import { Box, Text, Heading, Spinner, Flex, Stat, StatLabel, StatNumber, Image, Grid, StatHelpText, StatArrow, HStack, VStack } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
+import BuyCoin from '../components/BuyCoin';
+import SellCoin from '../components/SellCoin';
+import { useDisclosure, useToast } from '@chakra-ui/react';
 
 const CoinDetails = () => {
   const [coin, setCoin] = useState(null);
@@ -12,6 +15,8 @@ const CoinDetails = () => {
   const chartContainerRef = useRef();
   const chartRef = useRef();
   const lineSeriesRef = useRef();
+  const [amountToBuy, setAmountToBuy] = useState(0);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { coin_id } = useParams();
 
@@ -95,6 +100,88 @@ const CoinDetails = () => {
   const historicalHigh = Math.max(...priceHistory.map(entry => entry.price));
   const historicalLow = Math.min(...priceHistory.map(entry => entry.price));
 
+  const handleBuyClick = (coin) => {
+    setSelectedCoin(coin);
+  };
+
+  const handleFormBuyClick = () => {
+    if (selectedCoin) {
+      onOpen();
+    }
+  };
+
+  const handleBuyConfirm = async () => {
+    console.log('Buying coin...user val: ', user);
+
+    try {
+      const response = await axios.post(`http://192.168.0.53:9090/api/usercoins/buy`, {
+        user_id: user.user_id,
+        coin_id: selectedCoin.coin_id,
+        amount: amountToBuy
+      });
+
+      if (response.status === 200) {
+        // Handle successful purchase...
+        console.log(response.data.message);
+        // Update user's balance in context
+        const newUser = {
+          ...user,
+          funds: user.funds - (selectedCoin.current_price * amountToBuy)
+        };
+
+        setUser(newUser);  // setUser should be fetched from AuthContext
+        // patch blance user id
+        const fundsNum = Number(newUser.funds);
+        console.log("fundsNum", fundsNum);
+        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { amount: fundsNum });
+
+        toast({
+          title: "Transaction Successful",
+          description: "You have successfully bought the coin",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+
+        // Redirect to Portfolio page
+        navigate('/portfolio');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        // Handle insufficient funds...
+        console.error(error.response.data.message);
+
+        toast({
+          title: "Transaction Failed",
+          description: "Insufficient funds",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+
+        // Open a modal informing the user that they do not have enough funds
+        // onOpenInsufficientFundsModal();
+      } else {
+        // Handle other errors...
+        console.error('An error occurred while processing your request.', error);
+
+        toast({
+          title: "Transaction Failed",
+          description: "An error occurred while processing your request",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
+
+    onClose();
+  };
+
+  const handleInputChange = (event) => {
+    setAmountToBuy(event.target.value);
+  };
+
   return (
 
     <Box p='4'>
@@ -114,15 +201,15 @@ const CoinDetails = () => {
               <HStack>
                 <StatArrow type={priceChange > 0 ? 'increase' : 'decrease'} />
                 <StatNumber fontSize="xs" color={priceChange > 0 ? 'green.500' : 'red.500'}>{priceChange.toFixed(2)}%</StatNumber>
-            <Stat mb='2'>{coin.symbol}</Stat>
+                <Stat mb='2'>{coin.symbol}</Stat>
               </HStack>
             </StatHelpText>
           </Stat>
           {/* Display the mascot image */}
-            <Image src={logoImagePath} alt={`${coin.name} Logo`} boxSize="150px" />
+          <Image src={logoImagePath} alt={`${coin.name} Logo`} boxSize="150px" />
 
           <HStack spacing="5px">
-          <Image src={imagePath} alt={`${coin.name} Mascot`} boxSize="150px" />
+            <Image src={imagePath} alt={`${coin.name} Mascot`} boxSize="150px" />
           </HStack>
 
           <Stat>
@@ -145,6 +232,14 @@ const CoinDetails = () => {
           <div ref={chartContainerRef} style={{ width: '100%', height: '300px', marginTop: '1px' }} />
 
         </Box>
+       <BuyCoin selectedCoin={coin}
+       amountToBuy={amountToBuy}
+       handleFormBuyClick={handleFormBuyClick}
+       handleBuyConfirm={handleBuyConfirm}
+       handleInputChange={handleInputChange}
+       onClose={onClose}
+       isOpen={isOpen} />
+       <SellCoin selectedCoin={coin} />
       </Flex>
     </Box>
   );
