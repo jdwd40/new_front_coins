@@ -29,7 +29,7 @@ function CoinList() {
 
   const fetchPriceHistory = async (coin_id) => {
     try {
-      const response = await axios.get(`http://192.168.0.53:9090/api/history/${coin_id}`);
+      const response = await axios.get(`https://jwd1.xyz/api/history/${coin_id}`);
       const history = response.data.priceHistory;
       const lastEntry = history[history.length - 1];
       const secondLastEntry = history[history.length - 2];
@@ -43,7 +43,7 @@ function CoinList() {
   useEffect(() => {
     const fetchCoins = async () => {
       try {
-        const response = await axios.get('http://192.168.0.53:9090/api/coins');
+        const response = await axios.get('https://jwd1.xyz/api/coins');
         let fetchedCoins = response.data.coins;
         fetchedCoins = fetchedCoins.sort((a, b) => parseFloat(b.current_price) - parseFloat(a.current_price));
         setCoins(fetchedCoins);
@@ -104,7 +104,7 @@ function CoinList() {
     console.log('Buying coin...user val: ', user);
 
     try {
-      const response = await axios.post(`http://192.168.0.53:9090/api/usercoins/buy`, {
+      const response = await axios.post(`https://jwd1.xyz/api/usercoins/buy`, {
         user_id: user.user_id,
         coin_id: selectedCoin.coin_id,
         amount: amountToBuy
@@ -123,7 +123,7 @@ function CoinList() {
         // patch blance user id
         const fundsNum = Number(newUser.funds);
         console.log("fundsNum", fundsNum);
-        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { amount: fundsNum });
+        await axios.patch(`https://jwd1.xyz/api/user/balance/${user.user_id}`, { amount: fundsNum });
 
         toast({
           title: "Transaction Successful",

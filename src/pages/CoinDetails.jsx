@@ -24,7 +24,7 @@ const CoinDetails = () => {
     const fetchCoin = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`http://192.168.0.53:9090/api/coins/${coin_id}`);
+        const response = await axios.get(`https://jwd1.xyz/api/coins/${coin_id}`);
         setCoin(response.data.coin);
         setError(null);
       } catch (e) {
@@ -32,7 +32,7 @@ const CoinDetails = () => {
       }
 
       try {
-        const historyResponse = await axios.get(`http://192.168.0.53:9090/api/history/${coin_id}`);
+        const historyResponse = await axios.get(`https://jwd1.xyz/api/history/${coin_id}`);
         const allEntries = historyResponse.data.priceHistory;
         setPriceHistory(allEntries);
       } catch (e) {
@@ -114,7 +114,7 @@ const CoinDetails = () => {
     console.log('Buying coin...user val: ', user);
 
     try {
-      const response = await axios.post(`http://192.168.0.53:9090/api/usercoins/buy`, {
+      const response = await axios.post(`https://jwd1.xyz/api/usercoins/buy`, {
         user_id: user.user_id,
         coin_id: selectedCoin.coin_id,
         amount: amountToBuy

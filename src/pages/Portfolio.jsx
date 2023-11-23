@@ -49,10 +49,10 @@ const Portfolio = () => {
     setIsLoading(true);
     try {
       if (user) {
-        const allCoinsRes = await axios.get(`http://192.168.0.53:9090/api/coins`);
+        const allCoinsRes = await axios.get(`https://jwd1.xyz/api/coins`);
         const allCoins = allCoinsRes.data.coins;
 
-        const userCoinsRes = await axios.get(`http://192.168.0.53:9090/api/usercoins/${user.user_id}`);
+        const userCoinsRes = await axios.get(`https://jwd1.xyz/api/usercoins/${user.user_id}`);
         const userCoinsData = userCoinsRes.data.userCoins;
 
         const userCoins = userCoinsData.map(userCoin => {
@@ -110,7 +110,7 @@ const Portfolio = () => {
   const handleSellConfirm = async () => {
     // You need to replace this URL with your API endpoint
     try {
-      const response = await axios.post(`http://192.168.0.53:9090/api/usercoins/sell`, {
+      const response = await axios.post(`https://jwd1.xyz/api/usercoins/sell`, {
         user_id: user.user_id,
         coin_id: coinToSell.coin_id,
         amount: amountToSell
@@ -127,7 +127,7 @@ const Portfolio = () => {
         const fundsNum = Number(newUser.funds);
 
         setUser(newUser);  // setUser should be fetched from AuthContext
-        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { amount: fundsNum });
+        await axios.patch(`https://jwd1.xyz/api/user/balance/${user.user_id}`, { amount: fundsNum });
 
         // Display a success toast notification
         toast({
