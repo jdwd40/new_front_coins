@@ -1,7 +1,3 @@
-Absolutely, let's tailor the README to your specific needs and highlight the unique aspects of your project. Since you mentioned focusing on the 'why' behind the app and its unique technology stack, we'll emphasize these points.
-
----
-
 # Fantasy Crypto Exchange Simulator - Frontend
 
 ## Introduction
@@ -36,6 +32,3 @@ The idea behind this simulator was to blend the lines between fantasy and realit
 ## Visit the App
 Experience the Fantasy Crypto Exchange Simulator firsthand at [jdwd40.com](http://jdwd40.com).
 
----
-
-This README highlights the unique aspects of your project and your motivation for creating it. It should set your project apart in a portfolio review. Remember to adjust any part of this template to better fit your project's specifics or your personal style. Good luck with your project – it sounds like a standout piece! 🌟💻
