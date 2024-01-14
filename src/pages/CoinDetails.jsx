@@ -133,7 +133,7 @@ const CoinDetails = () => {
         // patch blance user id
         const fundsNum = Number(newUser.funds);
         console.log("fundsNum", fundsNum);
-        await axios.patch(`http://192.168.53:9090/api/user/balance/${user.user_id}`, { amount: fundsNum });
+        await axios.patch(`https://jwd1.xyz/api/user/balance/${user.user_id}`, { amount: fundsNum });
 
         toast({
           title: "Transaction Successful",
