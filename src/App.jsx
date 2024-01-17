@@ -17,10 +17,10 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <VStack
-          height={'100vh'}
+          minH={'100vh'}  // Changed from height to minH
           bg='gray.100'
           width='full'
-          overflow='hidden'
+          overflowY='auto'  // Changed from hidden to auto
           spacing={0}
         >
           <Routes>

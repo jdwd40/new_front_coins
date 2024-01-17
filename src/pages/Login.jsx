@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import {
-  Box, Button, Center, FormControl, FormLabel, Input, useToast, Stack, Text
-  , Image,
-  Heading
+  Box, Button, Center, FormControl, FormLabel, Input, useToast, Stack, Text,
+  Image, Heading, Container
 } from '@chakra-ui/react';
 import { useState, useContext } from 'react';
 import axios from 'axios';
@@ -56,49 +55,51 @@ function Login() {
   };
 
   return (
-<Center py={12}>
-  <Box as="form" onSubmit={handleSubmit} w={{ base: 'full', md: '400px' }} p={8} boxShadow="lg">
-    <Heading mb="2">Please Login to Your Account</Heading>
-    <Center>
-      <Image 
-        src="public/images/b1.png" 
-        alt="logo" 
-        boxSize={{ base: '150px', md: '250px' }}
-        objectFit="cover"
-        borderRadius="md"
-      />
-    </Center>
+    <Container maxW="container.md" py={12}>
+      <Center>
+        <Box as="form" onSubmit={handleSubmit} w="full" maxW="400px" p={8} boxShadow="lg" borderRadius="lg">
+          <Heading mb="4" textAlign="center">Please Login to Your Account</Heading>
+          <Center>
+            <Image
+              src="public/images/b1.png"
+              alt="logo"
+              boxSize={{ base: '100px', sm: '150px', md: '200px', lg: '250px' }}
+              objectFit="cover"
+              borderRadius="md"
+            />
+          </Center>
 
-    <Stack spacing={4} mt={6}>
-      {error && <Text color="red.500">{error}</Text>}
-      <FormControl id="email">
-        <FormLabel>Email</FormLabel>
-        <Input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          isRequired
-        />
-      </FormControl>
-      <FormControl id="password">
-        <FormLabel>Password</FormLabel>
-        <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          isRequired
-        />
-      </FormControl>
-      <Button mt={4} colorScheme="teal" isLoading={isLoading} type="submit">
-        Login
-      </Button>
-      <Button mt={4} colorScheme="teal" variant="outline">
-        <a href="/register">Register</a>
-      </Button>
-    </Stack>
-  </Box>
-</Center>
+          <Stack spacing={6} mt={6}>
+            {error && <Text color="red.500">{error}</Text>}
+            <FormControl id="email">
+              <FormLabel>Email</FormLabel>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                isRequired
+              />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                isRequired
+              />
+            </FormControl>
+            <Button colorScheme="teal" isLoading={isLoading} type="submit">
+              Login
+            </Button>
+            <Button colorScheme="teal" variant="outline">
+              <a href="/register">Register</a>
+            </Button>
+          </Stack>
+        </Box>
+      </Center>
+    </Container>
   );
 }
 
-export default Login;
+export default Login; 
