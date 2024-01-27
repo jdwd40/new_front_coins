@@ -11,8 +11,9 @@ import {
   Text,
   Toast,
   useToast,
-  Image
+  Image, 
 } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -102,9 +103,9 @@ function Register() {
         <Button mt={4} mr='4' colorScheme="teal" type="submit">
           Register
         </Button>
-        <Button mt={4} colorScheme="teal" variant="outline">
-          <a href="/login">Login</a>
-        </Button>
+        <Button mt={4} mr='4' as={RouterLink} to="/login" style={{ textDecoration: 'none' }}>
+  Login
+</Button>
       </Box>
     </Center>
   );

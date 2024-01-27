@@ -6,6 +6,7 @@ import {
 import { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import { Link as RouterLink } from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
@@ -93,8 +94,8 @@ function Login() {
             <Button colorScheme="blue" isLoading={isLoading} type="submit" shadow="md">
               Login
             </Button>
-            <Button colorScheme="blue" variant="outline" shadow="md">
-              <a href="/register" style={{ color: 'white' }}>Register</a>
+            <Button as={RouterLink} to="/register" colorScheme="blue" variant="outline" shadow="md" style={{ textDecoration: 'none' }}>
+              Register
             </Button>
           </Stack>
         </Box>
