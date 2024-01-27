@@ -57,17 +57,18 @@ function Login() {
   return (
     <Container maxW="container.md" py={12}>
       <Center>
-        <Box as="form" onSubmit={handleSubmit} w="full" maxW="400px" p={8} boxShadow="lg" borderRadius="lg">
-          <Heading mb="4" textAlign="center">Please Login to Your Account</Heading>
-          <Center>
-            <Image
-              src="public/images/b1.png"
-              alt="logo"
-              boxSize={{ base: '100px', sm: '150px', md: '200px', lg: '250px' }}
-              objectFit="cover"
-              borderRadius="md"
-            />
-          </Center>
+        <Box
+          as="form"
+          onSubmit={handleSubmit}
+          w="full"
+          maxW="400px"
+          p={8}
+          boxShadow="xl" // Changed to 'xl' for a more pronounced shadow
+          borderRadius="lg"
+          bg="gray.700" // Darker background for the form
+          color="white" // Ensuring text is readable on the dark background
+        >
+          <Heading mb="4" textAlign="center" size="md">Please Login to Your Account</Heading>
 
           <Stack spacing={6} mt={6}>
             {error && <Text color="red.500">{error}</Text>}
@@ -89,16 +90,17 @@ function Login() {
                 isRequired
               />
             </FormControl>
-            <Button colorScheme="teal" isLoading={isLoading} type="submit">
+            <Button colorScheme="blue" isLoading={isLoading} type="submit" shadow="md">
               Login
             </Button>
-            <Button colorScheme="teal" variant="outline">
-              <a href="/register">Register</a>
+            <Button colorScheme="blue" variant="outline" shadow="md">
+              <a href="/register" style={{ color: 'white' }}>Register</a>
             </Button>
           </Stack>
         </Box>
       </Center>
     </Container>
+
   );
 }
 

@@ -82,15 +82,6 @@ function Register() {
     <Center py={12}>
       <Box as="form" onSubmit={handleSubmit}>
         <Heading mb="2">Register Your Account</Heading>
-        <Center>
-          <Image
-            src="public/images/b2.png"
-            alt="logo"
-            boxSize={{ base: '150px', md: '250px' }}
-            objectFit="cover"
-            borderRadius="md"
-          />
-        </Center>
         <FormControl id="username">
           <FormLabel>Username</FormLabel>
           <Input type="text" value={username} onChange={e => setUsername(e.target.value)} />
