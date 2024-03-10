@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import BuyCoin from '../components/BuyCoin';
 import { useNavigate } from 'react-router-dom';
+import Sidebar from '../components/Sidebar';
 
 
 function CoinList() {
@@ -174,11 +175,10 @@ function CoinList() {
 
   return (
     <Flex>
+      <Sidebar coins={coins} totalMarketValue={totalMarketValue}/>
       <Box flex="1" p='5'>
         <Text fontSize="2xl" marginBottom="5">
-          Total Market Value: {totalMarketValue.toFixed(2)}
-          {totalMarketValue > prevTotalMarketValue && <Badge colorScheme="green">⬆</Badge>}
-          {totalMarketValue < prevTotalMarketValue && <Badge colorScheme="red">⬇</Badge>}
+          Coin Prices
         </Text>
         <Table variant="simple">
           <Thead>

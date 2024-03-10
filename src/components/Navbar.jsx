@@ -24,9 +24,8 @@ function Navbar() {
   const location = useLocation();
   const buttonBg = useColorModeValue('gray.200', 'gray.700');
 
-  console.log('from navbar', user);
   return (
-    <Box bg="green.900" px={4}>
+    <Box bgGradient="linear(to-r, green.800, blue.500)" px={4} mb={1}>
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
         <IconButton
           size={'md'}
@@ -38,7 +37,7 @@ function Navbar() {
         <Text
           fontSize={'1xl'}
           fontFamily={'monospace'}
-          fontWeight={500}
+          fontWeight={600} // Increased font weight
           color="white"
         >
           Crypto Coins Exchange Simulator
@@ -55,6 +54,7 @@ function Navbar() {
   );
 }
 
+
 function Navigation() {
   const { user, logout } = useContext(AuthContext);
   const location = useLocation();
@@ -66,8 +66,9 @@ function Navigation() {
         as={RouterLink}
         to="/"
         colorScheme={'teal'}
-        variant={'link'}
+        variant={'solid'}
         bg={location.pathname === '/' ? buttonBg : null}
+        _hover={{ bg: 'gray.300', color: 'teal.700' }}
       >
         Buy Coins
       </Button>
@@ -77,7 +78,8 @@ function Navigation() {
           to="/login"
           colorScheme={'teal'}
           variant={'solid'}
-          bg={location.pathname === '/login' || location.pathname === '/register' ? buttonBg : null}
+          bg={location.pathname === '/login' ? buttonBg : null}
+          _hover={{ bg: 'gray.300', color: 'teal.700' }}
         >
           Login
         </Button>
@@ -87,15 +89,16 @@ function Navigation() {
           as={RouterLink}
           to="/portfolio"
           colorScheme={'teal'}
-          variant={'link'}
+          variant={'solid'}
           bg={location.pathname === '/portfolio' ? buttonBg : null}
+          _hover={{ bg: 'gray.300', color: 'teal.700' }}
         >
           Portfolio
         </Button>
       )}
       {user && (
         <Menu>
-          <MenuButton as={Button} colorScheme={'teal'} variant={'link'} rightIcon={<ChevronDownIcon />}>
+          <MenuButton as={Button} colorScheme={'teal'} variant={'solid'} rightIcon={<ChevronDownIcon />} _hover={{ bg: 'gray.300', color: 'teal.700' }}>
             Welcome, {user.username}!
           </MenuButton>
           <MenuList>
@@ -106,7 +109,12 @@ function Navigation() {
         </Menu>
       )}
       {user && (
-        <Button onClick={logout} colorScheme={'teal'} variant={'link'}>
+        <Button
+          onClick={logout}
+          colorScheme={'teal'}
+          variant={'solid'}
+          _hover={{ bg: 'gray.300', color: 'teal.700' }}
+        >
           Logout
         </Button>
       )}

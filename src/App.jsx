@@ -8,8 +8,7 @@ import UserProfile from './pages/UserProfile';
 import Navbar from './components/Navbar';
 import Portfolio from './pages/Portfolio';
 import { AuthProvider } from './contexts/AuthContext';
-import { VStack } from '@chakra-ui/react';
-// import other pages...
+import { VStack, Flex } from '@chakra-ui/react';
 
 function App() {
   return (
