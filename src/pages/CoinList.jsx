@@ -19,8 +19,6 @@ function CoinList() {
   const [prevTotalMarketValue, setPrevTotalMarketValue] = useState(0);
   const [totalMarketValue, setTotalMarketValue] = useState(0);
 
-
-
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -29,26 +27,43 @@ function CoinList() {
   }, [totalMarketValue]);
 
   const fetchPriceHistory = async (coin_id) => {
+    console.log('Fetching price history for coin:', coin_id);
     try {
-      const response = await axios.get(`https://jwd1.xyz/api/history/${coin_id}`);
-      const history = response.data.priceHistory;
-      const lastEntry = history[history.length - 1];
-      const secondLastEntry = history[history.length - 2];
-      const change = ((lastEntry.price - secondLastEntry.price) / secondLastEntry.price) * 100;
-      return change;
+      // Fetch the latest price from the current price endpoint
+      const currentPriceResponse = await axios.get(`http://localhost:9001/api/coins/${coin_id}/getprice`);
+      const currentPrice = currentPriceResponse.data.current_price;
+      console.log('Current price:', currentPrice);
+  
+      // Fetch the price history
+      const historyResponse = await axios.get(`http://localhost:9001/api/history/${coin_id}`);
+      const history = historyResponse.data;
+  
+      // Ensure there is at least one history entry to calculate the price change
+      if (history.length > 0) {
+        const lastPriceHistory = history[history.length - 1].price; // Assuming the last element is the oldest
+        const priceChangePercent = ((currentPrice - lastPriceHistory) / lastPriceHistory) * 100;
+  
+        console.log('Price change:', priceChangePercent);
+        return priceChangePercent;
+      } else {
+        console.log('No price history available for calculation');
+        return null; // Or any default value you prefer
+      }
     } catch (error) {
-      console.error('Failed to fetch price history:', error);
+      console.error('Failed to fetch price data:', error);
+      return null; // Handle error case
     }
   };
+  
 
   useEffect(() => {
     const fetchCoins = async () => {
       try {
-        const response = await axios.get('https://jwd1.xyz/api/coins');
-        let fetchedCoins = response.data.coins;
+        const response = await axios.get('http://localhost:9001/api/coins');
+        let fetchedCoins = response.data;
         fetchedCoins = fetchedCoins.sort((a, b) => parseFloat(b.current_price) - parseFloat(a.current_price));
         setCoins(fetchedCoins);
-        const calculatedTotalMarketValue = fetchedCoins.reduce((total, coin) => total + parseFloat(coin.current_price), 0);
+        const calculatedTotalMarketValue = response.data[response.data.length - 1];
         setPrevTotalMarketValue(totalMarketValue);
         setTotalMarketValue(calculatedTotalMarketValue);
         setIsLoading(false);
@@ -70,11 +85,10 @@ function CoinList() {
 
   useEffect(() => {
     const fetchAllPriceHistories = async () => {
-      const coinsWithHistory = await Promise.all(coins.map((coin) => fetchPriceHistory(coin.coin_id)));
-      setCoinHistory(coinsWithHistory.reduce((acc, coin, index) => ({ ...acc, [coins[index].coin_id]: coin }), {}));
+      setCoinHistory(await fetchPriceHistory);
     };
 
-    fetchAllPriceHistories();
+    // fetchAllPriceHistories();
     const intervalId = setInterval(fetchAllPriceHistories, 5000);
     return () => clearInterval(intervalId);
   }, [coins]);
